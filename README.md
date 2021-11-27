@@ -10,9 +10,8 @@ https://streamable.com/n0ybb6
 - [x] Invite a victim to all gcs
 - [x] Remove victim from all gcs
 - [x] Spam Add and Remove victim from all gcs
-
+- [x] image support/ change gc images
 # haven't added
-- [ ] image support/ change gc images
 - [ ] and I'll see what else vast has so I can give it to yall
 
 # Q & A
@@ -26,6 +25,6 @@ Can I skid it and claim that I made it...?
 You're gonna do it even if I tell you not to.
 
 ------------------------------------------------------------
-![](FHbutlR5.png)
+![](a.png)
 
 # This is purely for educational purposes only. I do not advice in using this for malicious intent. Thank you.
