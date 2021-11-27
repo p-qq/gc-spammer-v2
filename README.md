@@ -1,3 +1,6 @@
+# updates Nov, 26, 2021
+well I haven't seen any that got uploaded and were good enough so, here u go. Aesthic wise I dont feel like giving it color so ur staying with the old black and white ascii enjoy.
+
 # gc-spammer-v2
 If no1 uploads one in the next few days then I'll make it public so yall dont have to buy vast :)
 # vid of it in action
