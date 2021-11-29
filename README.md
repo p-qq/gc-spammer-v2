@@ -1,5 +1,6 @@
-# updates Nov, 28, 2021
-SORRY FORGOT TO PUT CONFIG>JSON
+# updates Nov, 29, 2021
+Issue with gc create will fix 
+
 
 # gc-spammer-v2
 If no1 uploads one in the next few days then I'll make it public so yall dont have to buy vast :)
