@@ -1,5 +1,5 @@
 # updates Nov, 29, 2021
-Issue with gc create will fix 
+gc creating is now a slower due to changing gc name etc. I will see if there is a way I can make it go back to original speed.
 
 
 # gc-spammer-v2
