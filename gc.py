@@ -57,12 +57,12 @@ def invnkick( uid,cIDS):
     while True:
         try:
             headers = {"Authorization": token}
-            r = session.put(f'https://canary.discordapp.com/api/v{randint(6,9)}/channels/{cIDS}/recipients/{uid}', headers=headers,proxies={"http": 'http://' + next(prox)}).result()
+            r = requests.put(f'https://canary.discordapp.com/api/v{randint(6,9)}/channels/{cIDS}/recipients/{uid}', headers=headers,proxies={"http": 'http://' + next(prox)}).result()
             if r.status_code == 200 or r.status_code == 201 or r.status_code == 204:
                 print(f"[ + ] Invited [ {uid} ] | In [ {cIDS} ] | ")
             elif r.status_code == 429:
                 print(f"[ - ] Failed to invite [ {uid} ] | In [ {cIDS} ]")
-            b = session.delete(f'https://canary.discordapp.com/api/v{randint(6,9)}/channels/{cIDS}/recipients/{uid}', headers=headers, proxies={"http": 'http://' + next(prox)}).result()
+            b = requests.delete(f'https://canary.discordapp.com/api/v{randint(6,9)}/channels/{cIDS}/recipients/{uid}', headers=headers, proxies={"http": 'http://' + next(prox)}).result()
             if b.status_code == 200 or b.status_code == 201 or b.status_code == 204:
                 print(f"[ + ] Removed [ {uid} ] | In [ {cIDS} ] ")
             elif b.status_code == 429:
@@ -74,7 +74,7 @@ def invnkick( uid,cIDS):
 def invtogc(uid, cIDS):
     try:
         headers = {"Authorization": token}
-        r = session.put(f'https://canary.discordapp.com/api/v{randint(6,9)}/channels/{cIDS}/recipients/{uid}', headers=headers,proxies={"http": 'http://' + next(prox)}).result()
+        r = session.put(f'https://canary.discordapp.com/api/v{randint(6,9)}/channels/{cIDS}/recipients/{uid}', headers=headers).result()
         if r.status_code == 200 or r.status_code == 201 or r.status_code == 204:
             print(f"[ + ] Invited [ {uid} ] | In [ {cIDS} ] ")
         elif r.status_code == 429:
@@ -86,7 +86,7 @@ def invtogc(uid, cIDS):
 def remfromgc(uid, cIDS):
     try:
         headers = {"Authorization": token}
-        r = session.delete(f'https://canary.discordapp.com/api/v{randint(6,9)}/channels/{cIDS}/recipients/{uid}', headers=headers, proxies={"http": 'http://' + next(prox)}).result()
+        r = requests.delete(f'https://canary.discordapp.com/api/v{randint(6,9)}/channels/{cIDS}/recipients/{uid}', headers=headers, proxies={"http": 'http://' + next(prox)})
         if r.status_code == 200 or r.status_code == 201 or r.status_code == 204:
             print(f"[ + ] Removed [ {uid} ] | In [ {cIDS} ] ")
         elif r.status_code == 429:
@@ -96,28 +96,30 @@ def remfromgc(uid, cIDS):
     sleep(2)
 
 
-def creategc(token, uid, name):
+def creategc(tokenn, uid, name):
     global pum
+    t = base64.b64encode(open("img.png", "rb").read()).decode('ascii')
     try:
-        headers2 = {"Authorization": token}
-        b = session.get("https://canary.discordapp.com/api/v{randint(6,9)}/users/@me", headers=headers2, proxies={"http": 'http://' + next(prox)}).result()
+        headers2 = {"Authorization": tokenn}
+        b = session.get("https://canary.discordapp.com/api/v6/users/@me", headers=headers2, proxies={"http": 'http://' + next(prox)}).result()
         tokenid = b.json()
         idd = tokenid['id']
     except:
         return
     try:
-        t = base64.b64encode(open("img.png", "rb").read()).decode('ascii')
-        headers = {"Authorization": token,"Content-Type" : "application/json"}
+        headers = {"Authorization": tokenn,"Content-Type" : "application/json"}
+        headers2 = {'Authorization': token,"Content-Type": "application/json"}
         json = {"recipients":[ f"{idd}",f"{uid}"]}
+        r = session.post(f'https://discordapp.com/api/v{randint(6,9)}/users/@me/channels', headers=headers, json=json, proxies={"http": 'http://' + next(prox)}).result()
+        gcID2 = r.json()
+        session.patch(f"https://discordapp.com/api/v{randint(6,9)}/channels/{gcID2['id']}", headers=headers2, json={"name": f"{name}","icon": f"data:image/png;base64,{t}"}, proxies={"http": 'http://' + next(prox)})
         pum += 1
-        r = session.post(f'https://canary.discordapp.com/api/v{randint(6,9)}/users/@me/channels', headers=headers, json=json, proxies={"http": 'http://' + next(prox)}).result()
         if r.status_code == 200 or r.status_code == 201 or r.status_code == 204:
             gcID = r.json()
             print(f"[ + ] created GC | GC ID [ {gcID['id']} ] | {pum}")
             with open('groupids.txt', 'a') as pp:
                 pp.write(gcID['id'] + "\n")
-            session.patch(f"https://canary.discordapp.com/api/v{randint(6,9)}/channels/{gcID['id']}", headers=headers, json={"name": choice(name),"icon": f"data:image/png;base64,{t}"}, proxies={"http": 'http://' + next(prox)}).result()
-            session.delete(f"https://canary.discordapp.com/api/v{randint(6,9)}/channels/{gcID['id']}", headers=headers, proxies={"http": 'http://' + next(prox)}).result()
+            session.delete(f"https://discordapp.com/api/v{randint(6,9)}/channels/{gcID['id']}", headers=headers, proxies={"http": 'http://' + next(prox)})
         elif r.status_code == 429:
             print(f"[ - ] ratelimited | {pum}")
     except:
@@ -128,7 +130,7 @@ def leavegcs(gcs):
     global bum
     try:
         headers = {"Authorization": token,"Content-Type" : "application/json"}
-        r = session.delete(f"https://canary.discordapp.com/api/v{randint(6,9)}/channels/{gcs}", headers=headers, proxies={"http": 'http://' + next(prox)}).result()
+        r = requests.delete(f"https://canary.discordapp.com/api/v{randint(6,9)}/channels/{gcs}", headers=headers, proxies={"http": 'http://' + next(prox)})
         bum += 1
         if r.status_code == 200 or r.status_code == 201 or r.status_code == 204:
             print(f"[ + ] Left [ {gcs} ] | {bum}")
@@ -152,9 +154,10 @@ def rename(cIDS, name):
     except:
         return
     sleep(2)
-def changemg(cIDS, ttoken):
+def changemg(cIDS):
     global cum
     try: 
+        ttoken = config.get('token')
         headers = {'Authorization': ttoken,"Content-Type": "application/json"}
         t = base64.b64encode(open("img.png", "rb").read()).decode('ascii')
         r = session.patch(f"https://canary.discordapp.com/api/v{randint(6,9)}/channels/{cIDS}", headers=headers, json={"icon": f"data:image/png;base64,{t}"}).result()
@@ -196,7 +199,6 @@ def gcc():
         t.join()
 
 def imgch(): 
-    ttoken = config.get('token')
     url = input("image url: ")
     with open('img.png', 'wb') as f:
         r = requests.get(url, stream=True)
@@ -212,15 +214,14 @@ def imgch():
     ui2()
     ts = []
     for cIDS in gc:
-        t = Thread(target=changemg, args=(cIDS, ttoken))
+        t = Thread(target=changemg, args=(cIDS,))
         t.start()
         ts.append(t)
     for t in ts:
         t.join()
 
 
-def bomb():
-    uid = input("User id: ")
+def bomb(uid):
     name = config.get("names")
     tokens = []
     for line in open("tokens.txt"):
@@ -229,8 +230,8 @@ def bomb():
     clear()
     ui2()
     ts = []
-    for token in tokens:
-        t = Thread(target=creategc, args=(token,uid,name))
+    for tokenn in tokens:
+        t = Thread(target=creategc, args=(tokenn,uid,name))
         t.start()
         ts.append(t)
     for t in ts:
@@ -323,8 +324,9 @@ def Menu():
         ui()
         an = input("Choice: ")
         if an == "1":
+            uid = input("User id: ")
             for i in range(500):
-                bomb()
+                bomb(uid)
         elif an == "2":
             gcleave()
         elif an == "3":
@@ -341,5 +343,3 @@ def Menu():
             scrgc()
 
 Menu()
-
-
